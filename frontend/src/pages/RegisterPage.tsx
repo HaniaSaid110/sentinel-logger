@@ -1,4 +1,4 @@
-import React, { useActionState, useEffect } from "react";
+import React from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -8,13 +8,13 @@ export default function RegisterPage() {
   const navigate = useNavigate();
 
   // Redirect if already logged in
-  useEffect(() => {
+  React.useEffect(() => {
     if (developer) {
       navigate("/dashboard", { replace: true });
     }
   }, [developer, navigate]);
 
-  const handleRegister = async (prevState: unknown, formData: FormData) => {
+  const handleRegister = async (__prevState: any, formData: FormData) => {
     const username = formData.get("username") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -30,7 +30,7 @@ export default function RegisterPage() {
     }
   };
 
-  const [state, formAction, isPending] = useActionState(handleRegister, {
+  const [state, formAction, isPending] = React.useActionState(handleRegister, {
     error: null,
   });
 
