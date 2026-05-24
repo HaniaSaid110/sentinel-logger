@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ app.use(cookieParser());
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use("/api/users", authRoutes);
-// app.use("/api/applications", applicationRoutes); // added in feat/backend-applications
+app.use("/api/applications", applicationRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────────────────────────
 app.use((_req, res) => {
