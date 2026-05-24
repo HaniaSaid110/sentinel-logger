@@ -1,4 +1,4 @@
-import React, { useActionState, useEffect } from "react";
+import React from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -8,7 +8,7 @@ export default function RegisterPage() {
   const navigate = useNavigate();
 
   // Redirect if already logged in
-  useEffect(() => {
+  React.useEffect(() => {
     if (developer) {
       navigate("/dashboard", { replace: true });
     }
@@ -30,7 +30,7 @@ export default function RegisterPage() {
     }
   };
 
-  const [state, formAction, isPending] = useActionState(handleRegister, {
+  const [state, formAction, isPending] = React.useActionState(handleRegister, {
     error: null,
   });
 
