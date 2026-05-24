@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -18,9 +19,9 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// ─── Routes (mounted later as features are added) ─────────────────────────────
-// app.use("/api/users", authRoutes);
-// app.use("/api/applications", applicationRoutes);
+// ─── Routes ───────────────────────────────────────────────────────────────────
+app.use("/api/users", authRoutes);
+// app.use("/api/applications", applicationRoutes); // added in feat/backend-applications
 
 // ─── 404 Handler ──────────────────────────────────────────────────────────────
 app.use((_req, res) => {
