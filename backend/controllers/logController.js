@@ -129,3 +129,61 @@ export const postLog = async (req, res, next) => {
     next(err);
   }
 };
+
+// ─── GET /api/applications/:name/logs/stats ──────────────────────────────────
+// Returns level distribution + daily log counts (for dashboard charts)
+export const getStats = async (req, res, next) => {
+  try {
+    const application = await Application.findOne({
+      name: req.params.name.toLowerCase(),
+      createdBy: req.developer._id,
+    });
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    // ── Level distribution: { INFO: n, WARN: n, ERROR: n } ───────────────────
+    const levelCounts = await Log.aggregate([
+      { $match: { applicationId: application._id } },
+      { $group: { _id: "$level", count: { $sum: "$count" } } },
+    ]);
+
+    const levelMap = { INFO: 0, WARN: 0, ERROR: 0 };
+    levelCounts.forEach(({ _id, count }) => {
+      levelMap[_id] = count;
+    });
+
+    // ── Daily counts per level over the last 30 days ──────────────────────────
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const dailyCounts = await Log.aggregate([
+      {
+        $match: {
+          applicationId: application._id,
+          createdAt: { $gte: thirtyDaysAgo },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            date: {
+              $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+            },
+            level: "$level",
+          },
+          count: { $sum: "$count" },
+        },
+      },
+      { $sort: { "_id.date": 1 } },
+    ]);
+
+    res.status(200).json({
+      levelDistribution: levelMap,
+      dailyCounts,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
