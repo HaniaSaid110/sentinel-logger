@@ -5,7 +5,7 @@ import React, {
   useEffect,
   type ReactNode,
 } from "react";
-import axiosInstance from "../lib/axios";
+import { authService } from "../services/authService";
 
 export interface Developer {
   id: string;
@@ -37,13 +37,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const refreshSession = async () => {
     try {
-      const response = await axiosInstance.get("/users/me");
-      if (response.data?.developer) {
-        setDeveloper(response.data.developer);
+      const data = await authService.getMe();
+      if (data?.developer) {
+        setDeveloper(data.developer);
       } else {
         setDeveloper(null);
       }
-    } catch (error) {
+    } catch {
       setDeveloper(null);
     } finally {
       setLoading(false);
@@ -51,21 +51,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshSession();
   }, []);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/users/login", {
-        email,
-        password,
-      });
-      if (response.data?.developer) {
-        setDeveloper(response.data.developer);
+      const data = await authService.login(email, password);
+      if (data?.developer) {
+        setDeveloper(data.developer);
       }
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Login failed");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message, { cause: error });
+      }
+      throw new Error("Login failed", { cause: error });
     } finally {
       setLoading(false);
     }
@@ -78,16 +79,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   ) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/users/register", {
-        username,
-        email,
-        password,
-      });
-      if (response.data?.developer) {
-        setDeveloper(response.data.developer);
+      const data = await authService.register(username, email, password);
+      if (data?.developer) {
+        setDeveloper(data.developer);
       }
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Registration failed");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message, { cause: error });
+      }
+      throw new Error("Registration failed", { cause: error });
     } finally {
       setLoading(false);
     }
@@ -96,9 +96,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const logout = async () => {
     setLoading(true);
     try {
-      await axiosInstance.post("/users/logout");
+      await authService.logout();
       setDeveloper(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Logout failed", error);
     } finally {
       setLoading(false);
@@ -114,6 +114,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
