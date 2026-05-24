@@ -14,7 +14,7 @@ export default function RegisterPage() {
     }
   }, [developer, navigate]);
 
-  const handleRegister = async (prevState: unknown, formData: FormData) => {
+  const handleRegister = async (prevState: any, formData: FormData) => {
     const username = formData.get("username") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;

@@ -14,7 +14,7 @@ export default function LoginPage() {
     }
   }, [developer, navigate]);
 
-  const handleLogin = async (prevState: unknown, formData: FormData) => {
+  const handleLogin = async (prevState: any, formData: FormData) => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 

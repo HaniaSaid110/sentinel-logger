@@ -1,5 +1,6 @@
 import axiosInstance from "../lib/axios";
-import { Developer } from "../contexts/AuthContext";
+import type { Developer } from "../contexts/AuthContext";
+import axios from "axios";
 
 export const authService = {
   getMe: async (): Promise<{ developer: Developer } | null> => {
@@ -16,7 +17,7 @@ export const authService = {
       const response = await axiosInstance.post("/users/login", { email, password });
       return response.data;
     } catch (error: unknown) {
-      if (axiosInstance.isAxiosError(error)) {
+      if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Login failed", { cause: error });
       }
       throw new Error("Login failed", { cause: error });
@@ -28,7 +29,7 @@ export const authService = {
       const response = await axiosInstance.post("/users/register", { username, email, password });
       return response.data;
     } catch (error: unknown) {
-      if (axiosInstance.isAxiosError(error)) {
+      if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Registration failed", { cause: error });
       }
       throw new Error("Registration failed", { cause: error });
