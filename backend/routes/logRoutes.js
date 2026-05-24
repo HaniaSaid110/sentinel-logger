@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { getLogs, postLog } from "../controllers/logController.js";
+import { getLogs, postLog, getStats } from "../controllers/logController.js";
 
 // mergeParams: true allows access to :name from the parent application router
 const router = Router({ mergeParams: true });
+
+// GET  /api/applications/:name/logs/stats — analytics (must be before /)
+router.get("/stats", getStats);
 
 // GET  /api/applications/:name/logs  — requires JWT (protected by parent router)
 router.get("/", getLogs);
