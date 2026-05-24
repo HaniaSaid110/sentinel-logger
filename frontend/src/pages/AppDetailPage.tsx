@@ -41,7 +41,7 @@ export default function AppDetailPage() {
       const res = await logService.getLogs(name, params);
       setData(res);
       setError(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || "Failed to fetch logs");
     } finally {
@@ -67,7 +67,7 @@ export default function AppDetailPage() {
     <div className="container mx-auto py-10 px-4 max-w-6xl">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" asChild>
+          <Button variant="outline" size="icon">
             <Link to="/dashboard" title="Back to Dashboard">
               <ArrowLeft className="h-4 w-4" />
             </Link>
@@ -78,7 +78,9 @@ export default function AppDetailPage() {
           </div>
         </div>
         <Button variant="outline" onClick={fetchLogs} disabled={loading}>
-          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+          <RefreshCw
+            className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+          />
           Refresh
         </Button>
       </div>

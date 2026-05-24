@@ -31,9 +31,8 @@ const developerSchema = new mongoose.Schema({
 
 // ─── Hash password before saving ─────────────────────────────────────────────
 developerSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 12);
-  next();
 });
 
 // ─── Instance method: compare plain password with hashed ─────────────────────

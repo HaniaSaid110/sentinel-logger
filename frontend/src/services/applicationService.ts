@@ -12,10 +12,13 @@ export const applicationService = {
   getApplications: async (): Promise<{ data: Application[] }> => {
     try {
       const response = await axiosInstance.get("/applications");
-      return response.data; // e.g. { data: [...] } or { status: "success", data: [...] }
+      return { data: response.data.applications }; // e.g. { data: [...] } or { status: "success", data: [...] }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || "Failed to fetch applications", { cause: error });
+        throw new Error(
+          error.response?.data?.message || "Failed to fetch applications",
+          { cause: error },
+        );
       }
       throw new Error("Failed to fetch applications", { cause: error });
     }
@@ -27,7 +30,10 @@ export const applicationService = {
       return response.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || "Failed to create application", { cause: error });
+        throw new Error(
+          error.response?.data?.message || "Failed to create application",
+          { cause: error },
+        );
       }
       throw new Error("Failed to create application", { cause: error });
     }
@@ -38,7 +44,10 @@ export const applicationService = {
       await axiosInstance.delete(`/applications/${name}`);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || "Failed to delete application", { cause: error });
+        throw new Error(
+          error.response?.data?.message || "Failed to delete application",
+          { cause: error },
+        );
       }
       throw new Error("Failed to delete application", { cause: error });
     }
