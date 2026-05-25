@@ -1,0 +1,19 @@
+{
+  "name": "sentinel-logger-sdk",
+  "version": "1.0.0",
+  "description": "Node.js SDK for Sentinel Logger — send application logs to your Sentinel dashboard",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": ["logging", "sentinel", "sdk", "monitoring"],
+  "author": "hania",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.16.1"
+  }
+}
