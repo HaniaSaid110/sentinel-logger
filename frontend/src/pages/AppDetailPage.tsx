@@ -25,7 +25,7 @@ export default function AppDetailPage() {
   const [level, setLevel] = useState<string>("ALL");
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [sortBy, setSortBy] = useState("createdAt"); // or "count"
+  const [sortBy, setSortBy] = useState("recent"); // "recent" | "count"
 
   const fetchLogs = useCallback(async () => {
     if (!name) return;
@@ -35,7 +35,7 @@ export default function AppDetailPage() {
         page,
         limit: 10,
         level: level === "ALL" ? undefined : level,
-        search: search || undefined,
+        message: search || undefined,
         sortBy,
       };
       const res = await logService.getLogs(name, params);
@@ -127,7 +127,7 @@ export default function AppDetailPage() {
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="createdAt">Most Recent</SelectItem>
+              <SelectItem value="recent">Most Recent</SelectItem>
               <SelectItem value="count">Most Occurred</SelectItem>
             </SelectContent>
           </Select>
@@ -142,10 +142,10 @@ export default function AppDetailPage() {
 
       <LogsTable logs={data?.logs || []} loading={loading} />
 
-      {data && data.totalPages > 1 && (
+      {data && data.pagination.totalPages > 1 && (
         <PaginationControls
-          currentPage={data.currentPage}
-          totalPages={data.totalPages}
+          currentPage={data.pagination.page}
+          totalPages={data.pagination.totalPages}
           onPageChange={setPage}
         />
       )}

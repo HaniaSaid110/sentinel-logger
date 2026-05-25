@@ -15,15 +15,18 @@ export interface GetLogsParams {
   page?: number;
   limit?: number;
   level?: string;
-  search?: string;
+  message?: string;
   sortBy?: string;
 }
 
 export interface GetLogsResponse {
   logs: Log[];
-  totalLogs: number;
-  totalPages: number;
-  currentPage: number;
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }
 
 export const logService = {
